@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//sources/app/common/dao/moduleDao.py=utf-8
+encoding//sources/app/infr/kbn/C_Neugoki.py=utf-8
+encoding//sources/app/infr/kbn/C_Pts.py=utf-8
+encoding//sources/app/infr/kbn/C_StopTorihiki.py=utf-8
+encoding//sources/app/infr/kbn/C_SyoriKekka.py=utf-8
+encoding//sources/app/main/kabuka_input/kabuka_input.py=utf-8
+encoding//sources/app/main/meigaramst_mnt/meigaramst_mnt.py=utf-8
+encoding//sources/config/app_config.py=utf-8
+encoding/mainExec.py=utf-8
