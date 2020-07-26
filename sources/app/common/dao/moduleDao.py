@@ -62,6 +62,16 @@ def deleteTbl(logger, conn, cur, tblNm, whereValues):
 
 # ===============================================================================================================
 
+def getSelectByKey(logger, cur, tblNm, colList, whereValues):
+    sql = getSelectSqlStatement(tblNm, colList, whereValues)
+    logger.info('｜｜SQL: %s', sql)
+    cur.execute(sql)
+    result = cur.fetchall()
+
+    return  result
+
+
+
 def getSelectAll(logger, cur, tblNm, colList, orderColList):
     sql = getSelectAllSqlStatement(tblNm, colList, orderColList)
     logger.info('｜｜SQL: %s', sql)
