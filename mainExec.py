@@ -12,6 +12,7 @@ def run_mainExec(execKinouId, syoriymd):
     from logging import getLogger
     from sources.config import app_config
     from sources.app.main.meigaramst_mnt import meigaramst_mnt
+    from sources.app.main.kabuka_input import kabuka_input
 
     logging.config.fileConfig('logging.conf')
     logger = getLogger()
@@ -26,6 +27,10 @@ def run_mainExec(execKinouId, syoriymd):
 
     if execKinouId == 'meigaramst_mnt':
         meigaramst_mnt.run_meigaramst_mnt(logger, execKinouId, syoriymd, db_connection, db_cursol)
+
+    elif execKinouId == 'kabuka_input':
+        kabuka_input.run_kabuka_input(logger, execKinouId, syoriymd, db_connection, db_cursol)
+
     else:
         pass
 

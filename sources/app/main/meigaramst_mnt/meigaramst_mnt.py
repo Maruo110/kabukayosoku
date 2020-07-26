@@ -22,7 +22,7 @@ def run_meigaramst_mnt(logger, execKinouId, syoriymd, db_connection, db_cursol):
     if os.path.isfile(filepath_meigaraitiran) == False:
         syorikekkakbn = C_SyoriKekka.ERROR
 
-        insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol)
+        moduleDao.insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol)
         logger.info('｜｜異常終了')
         logger.info('｜▲meigaramst_mnt終了')
         return
@@ -58,21 +58,9 @@ def run_meigaramst_mnt(logger, execKinouId, syoriymd, db_connection, db_cursol):
         moduleDao.insertTbl(logger, db_connection, db_cursol, 'm_meigara', "" , insertvalue)
         cnt_syori = cnt_syori + 1
 
-
-    insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol)
+    moduleDao.insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol)
 
     logger.info('｜｜正常終了')
     logger.info('｜▲meigaramst_mnt終了')
 
-
-def insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol):
-
-    insertvalue =  "'" + syoriymd + "'"
-    insertvalue =  insertvalue + ", '" + execKinouId + "'"
-    insertvalue =  insertvalue + ", " + str(syorikekkakbn)
-    insertvalue =  insertvalue + ", '" + '処理件数：' +str(cnt_syori) + '件' + "'"
-
-    collist = "s_syoriymd, s_kinou_id, n_syori_kekka_kbn, s_syori_comment"
-
-    moduleDao.insertTbl(logger, db_connection, db_cursol, 't_batchkekka', collist , insertvalue)
 
