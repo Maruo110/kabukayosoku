@@ -4,3 +4,7 @@
 *.log
 *.pyc
 sources/config/.env
+documents/~$株予測システム.xlsx
+documents/~$株予測システム処理概要.xlsx
+*.prefs
+*.prefs

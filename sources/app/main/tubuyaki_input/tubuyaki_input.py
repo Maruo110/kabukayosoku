@@ -42,7 +42,7 @@ def run_tubuyaki_input(logger, execKinouId, syoriymd, db_connection, db_cursol):
         meigara_id = str(meigara_mst_row[0])
         meigara_name = str(meigara_mst_row[1]).replace('(株)', '')
 
-        logger.debug('｜｜▼銘柄ID＝%s　銘柄名＝%s', meigara_id, meigara_name)
+        logger.info('｜｜▼銘柄ID＝%s　銘柄名＝%s', meigara_id, meigara_name)
 
         # 株価データテーブル取得処理
         where_values = "n_meigaraid = " + str(meigara_id) + " and s_dataymd = '" + syoriymd + "'"
@@ -61,13 +61,13 @@ def run_tubuyaki_input(logger, execKinouId, syoriymd, db_connection, db_cursol):
         req = twitter.get(twitter_api_url, params = params)
 
         if req.status_code == 200:
-            logger.debug('｜｜◇Twitter OAuth認証通過')
+            logger.info('｜｜◇Twitter OAuth認証通過')
 
             search_timeline = json.loads(req.text)
             tmp_search_result = search_timeline['statuses']
 
             if len(tmp_search_result) <= 0:
-                logger.debug('｜｜ツイート結果なし')
+                logger.info('｜｜ツイート結果なし')
             else:
 
                 for tweet in tmp_search_result:
@@ -82,36 +82,43 @@ def run_tubuyaki_input(logger, execKinouId, syoriymd, db_connection, db_cursol):
                     tweet_followers_count = tweet['user']['followers_count']
 
 
-                    logger.debug('tweet_url＝【' + tweet_url + '】')
-                    logger.debug('tweet_text＝【' + tweet_text + '】')
+                    logger.info('tweet_url＝【' + tweet_url + '】')
+                    logger.info('tweet_text＝【' + tweet_text + '】')
 
                     # つぶやきデータテーブル登録処理
                     insertvalue =  meigara_id
                     insertvalue =  insertvalue + ", '" + tweet_userid + "'"
                     insertvalue =  insertvalue + ", '" + str(tweet_datetime) + "'"
                     insertvalue =  insertvalue + ", '" + tweet_text + "'"
+                    insertvalue =  insertvalue + ", '" + tweet_url + "'"
                     insertvalue =  insertvalue + ", " + str(tweet_followers_count)
                     insertvalue =  insertvalue + ", " + str(neugoki_kbn)
                     insertvalue =  insertvalue + ", " + str(0)
                     insertvalue =  insertvalue + ", " + str(0)
                     insertvalue =  insertvalue + ", " + str(C_KousinJyoukyou.TUBUYAKIDATA_INPUT)
 
-                    collist = "n_meigaraid, s_userid, s_tubuyaki_nitiji, s_tubuyaki, n_followersuu, n_neugokikbn, d_one_neugoki_eikyousisuu, d_all_neugoki_eikyousisuu, n_kousin_jyoukyou_kbn"
+                    collist = "n_meigaraid, s_userid, s_tubuyaki_nitiji, s_tubuyaki, s_tubuyakiurl, n_followersuu, n_neugokikbn, d_one_neugoki_eikyousisuu, d_all_neugoki_eikyousisuu, n_kousin_jyoukyou_kbn"
 
                     moduleDao.insertTbl(logger, db_connection, db_cursol, 't_tubuyaki', collist , insertvalue)
                     cnt_syori = cnt_syori + 1
 
 
-        else:
-
-            logger.debug('｜｜◇Twitter OAuth認証≪失敗≫')
-            logger.debug('｜｜!ERR! StatusCode: %s', req.status_code)
-
-        logger.debug('｜｜▲')
-
-
-        if cnt_syori >= 30:
+        # Rate Limit エラーの場合
+        elif req.status_code == 429:
+            logger.info('｜｜◇Twitter OAuth認証≪失敗≫≪Rate Limit エラー≫')
+            logger.info('｜｜!ERR! StatusCode: %s', req.status_code)
             break
+
+        else:
+            logger.info('｜｜◇Twitter OAuth認証≪失敗≫')
+            logger.info('｜｜!ERR! StatusCode: %s', req.status_code)
+            break
+
+        logger.info('｜｜▲')
+
+
+        #if cnt_syori >= 30:
+        #    break
 
 
     moduleDao.insertBatchKekkaTbl(logger, execKinouId, syoriymd, syorikekkakbn, cnt_syori, db_connection, db_cursol)
@@ -131,6 +138,7 @@ def removeNoise(str):
     result = removeKaigyou(result)
     result = removeTabStr(result)
     result = removeSpacesStr(result)
+    result = removeCp932Str(result)
 
     return result
 
@@ -171,6 +179,10 @@ def removeSpacesStr(str):
     import re
     return re.sub(r"\s+", " ", str)
 
+def removeCp932Str(str):
+    result = str.encode('cp932', "ignore")
+    result = result.decode('cp932')
+    return result
 
 def convert_datetime(datetime_str):
     import time

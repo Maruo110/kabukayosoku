@@ -47,6 +47,8 @@ def getDeleteSqlStatement(tblNm, whereValues):
 
 def insertTbl(logger, conn, cur, tblNm, colList, insertValues):
     sql = getInsertSqlStatement(tblNm, colList, insertValues)
+    sql = sql.replace(' －', ' 0')
+
     logger.info('｜｜SQL: %s', sql)
     cur.execute(sql)
 
