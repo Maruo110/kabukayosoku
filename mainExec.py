@@ -31,7 +31,7 @@ def run_mainExec(execKinouId, syoriymd):
         meigaramst_mnt.run_meigaramst_mnt(logger, execKinouId, syoriymd, db_connection, db_cursol)
 
     elif execKinouId == 'kabuka_input':
-        kabuka_input.run_kabuka_input(logger, execKinouId, syoriymd, db_connection, db_cursol)
+        kabuka_input.run_kabuka_input(logger, execKinouId, syoriymd, 0, db_connection, db_cursol)
 
     elif execKinouId == 'tubuyaki_input':
         tubuyaki_input.run_tubuyaki_input(logger, execKinouId, syoriymd, db_connection, db_cursol)

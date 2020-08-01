@@ -54,6 +54,12 @@ def insertTbl(logger, conn, cur, tblNm, colList, insertValues):
 
     conn.commit()
 
+def updateTbl(logger, conn, cur, tblNm, setValues, whereValues):
+    sql = getUpdateSqlStatement(tblNm, setValues, whereValues)
+    logger.info('｜｜SQL: %s', sql)
+    cur.execute(sql)
+    conn.commit()
+
 
 def deleteTbl(logger, conn, cur, tblNm, whereValues):
     sql = getDeleteSqlStatement(tblNm, whereValues)
@@ -71,6 +77,7 @@ def getSelectByKey(logger, cur, tblNm, colList, whereValues):
     result = cur.fetchall()
 
     return  result
+
 
 
 
