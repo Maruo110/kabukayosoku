@@ -15,6 +15,7 @@ def run_mainExec(execKinouId, syoriymd):
     from sources.app.main.kabuka_input import kabuka_input
     from sources.app.main.tubuyaki_input import tubuyaki_input
     from sources.app.main.tubuyakiword_analysis import tubuyakiword_analysis
+    from sources.app.main.meigara_tubuyakiword_summary import meigara_tubuyakiword_summary
 
     logging.config.fileConfig('logging.conf')
     logger = getLogger()
@@ -38,6 +39,9 @@ def run_mainExec(execKinouId, syoriymd):
 
     elif execKinouId == 'tubuyakiword_analysis':
         tubuyakiword_analysis.run_tubuyakiword_analysis(logger, execKinouId, syoriymd, db_connection, db_cursol)
+
+    elif execKinouId == 'meigara_tubuyakiword_summary':
+        meigara_tubuyakiword_summary.run_meigara_tubuyakiword_summary(logger, execKinouId, syoriymd, db_connection, db_cursol)
 
     else:
         pass

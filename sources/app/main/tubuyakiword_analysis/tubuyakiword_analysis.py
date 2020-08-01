@@ -46,7 +46,7 @@ def run_tubuyakiword_analysis(logger, execKinouId, syoriymd, db_connection, db_c
 
     # つぶやきデータテーブルのレコード分、以下を繰り返す（添え字：idx1）
     where_values = "n_kousin_jyoukyou_kbn = 1"
-    resultset = moduleDao.getSelectByKey(logger, db_cursol, 't_tubuyaki', 'n_tubuyaki_id, s_tubuyaki, n_neugokikbn', where_values)
+    resultset = moduleDao.getSelectByKey(logger, db_cursol, 't_tubuyaki', 'n_tubuyaki_id, s_tubuyaki, n_neugokikbn, n_followersuu', where_values)
 
     t = Tokenizer()
 
@@ -58,6 +58,7 @@ def run_tubuyakiword_analysis(logger, execKinouId, syoriymd, db_connection, db_c
 
         eikyoudo_up = 0
         eikyoudo_down = 0
+        tubuyai_tango_list = []
 
         logger.info('｜｜▼つぶやきID＝%s', tubuyaki_id)
         logger.info('｜｜｜つぶやき文言＝%s', tubuyaki)
@@ -75,6 +76,11 @@ def run_tubuyakiword_analysis(logger, execKinouId, syoriymd, db_connection, db_c
                 continue
             else:
                 pass
+
+            if (tmp_tango in tubuyai_tango_list):
+                pass
+            else:
+                tubuyai_tango_list.append(tmp_tango)
 
             #tmp_tango_hinsi = str(token.part_of_speech[0])
             #tmp_tango_hinsi = str(token.part_of_speech)
@@ -123,8 +129,26 @@ def run_tubuyakiword_analysis(logger, execKinouId, syoriymd, db_connection, db_c
 
                 moduleDao.updateTbl(logger, db_connection, db_cursol, 't_tubuyakitangoseisitu', upadate_setvalue , where_values3)
 
+
+        # select sum(d_eikyoudo_age), sum(d_eikyoudo_sage) from t_tubuyakitangoseisitu where s_tango in ('銘柄', 'ます', 'ない')
+        in_values = ""
+
+        for tmp_tubuyaki_tango in tubuyai_tango_list:
+            if in_values != "":
+                in_values = in_values + ", "
+
+            in_values = in_values + "'" + tmp_tubuyaki_tango + "'"
+
+        where_values5 = "s_tango in ("  + in_values + ")"
+        resultset5 = moduleDao.getSelectByKey(logger, db_cursol, 't_tubuyakitangoseisitu', 'sum(d_eikyoudo_age), sum(d_eikyoudo_sage)', where_values5)
+
         # 更新状況区分を更新
-        upadate_setvalue2 =  "n_kousin_jyoukyou_kbn = 2"
+        tmp_one_neugoki_eikyousisuu = float(resultset5[0][0]) - float(resultset5[0][1])
+        tmp_all_neugoki_eikyousisuu = tmp_one_neugoki_eikyousisuu * int(tubuyakidata_row[3])
+
+        upadate_setvalue2 =  "d_one_neugoki_eikyousisuu = " + str(tmp_one_neugoki_eikyousisuu)
+        upadate_setvalue2 = upadate_setvalue2 +  ", d_all_neugoki_eikyousisuu = " + str(tmp_all_neugoki_eikyousisuu)
+        upadate_setvalue2 = upadate_setvalue2 + ", n_kousin_jyoukyou_kbn = 2"
         where_values4 = "n_tubuyaki_id = " + str(tubuyaki_id)
         moduleDao.updateTbl(logger, db_connection, db_cursol, 't_tubuyaki', upadate_setvalue2 , where_values4)
 

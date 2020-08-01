@@ -14,25 +14,25 @@ def getInsertSqlStatement(tblNm, colList, insertValues):
 
 def getSelectMaxSqlStatement(tblNm, colNm):
     sql= "SELECT MAX(" + colNm + ") FROM " + tblNm
-    print(sql)
+    #print(sql)
     return sql
 
 
 def getSelectSqlStatement(tblNm, colNm, whereValues):
     sql= "SELECT " + colNm + " FROM " + tblNm + " WHERE " + whereValues
-    print(sql)
+    #print(sql)
     return sql
 
 
 def getSelectAllSqlStatement(tblNm, colList, orderColList):
     sql= "SELECT " + colList + " FROM " + tblNm + ' ORDER BY ' + orderColList
-    print(sql)
+    #print(sql)
     return sql
 
 
 def getUpdateSqlStatement(tblNm, setValues, whereValues):
     sql= "UPDATE " + tblNm + " SET " + setValues + " WHERE " + whereValues
-    print(sql)
+    #print(sql)
     return sql
 
 

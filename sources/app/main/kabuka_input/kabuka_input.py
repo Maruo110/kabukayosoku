@@ -32,7 +32,7 @@ def run_kabuka_input(logger, execKinouId, syoriymd, ptskbn, db_connection, db_cu
 
         meigara_id = str(meigara_mst_row[0])
 
-        if int(meigara_id) <= 3472:
+        if int(meigara_id) <= 7885:
             continue
         else:
             pass
@@ -121,7 +121,7 @@ def getKabukaByPtsNone(logger, syoriymd, meigara_id):
                 elif before_element == '終値':
                     tmp_owarine = tmp.replace(',', '')
 
-                    if tmp_owarine != '－':
+                    if tmp_owarine != '－' and tmp_owarine_before != '－':
                         tmp_owarine_before_zoukaritu = round(float(tmp_owarine) / float(tmp_owarine_before), 3)
                         tmp_owarine_before_zoukagk = round((float(tmp_owarine) - float(tmp_owarine_before)), 3)
                     else:
